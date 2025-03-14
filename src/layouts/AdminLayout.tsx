@@ -3,6 +3,7 @@ import React from 'react';
 import { useSidebar } from '@/components/ui/sidebar';
 import AdminSidebar from '@/components/AdminSidebar';
 import { useTheme } from '@/context/ThemeContext';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -25,7 +26,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         }`}
         style={{ marginLeft: !open ? '60px' : '240px' }}
       >
-        {children}
+        <div className="flex justify-end mb-4">
+          <ThemeSwitcher />
+        </div>
+        <div className="animate-fade-in">
+          {children}
+        </div>
       </main>
     </div>
   );

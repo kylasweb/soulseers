@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
+import { useTheme } from '@/context/ThemeContext';
 
 interface AdminSidebarProps {
   collapsed: boolean;
@@ -27,13 +28,25 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
   collapsed,
   toggleSidebar
 }) => {
+  const { theme } = useTheme();
+  
+  const sidebarClasses = cn(
+    "sidebar h-screen fixed left-0 top-0 z-30 bg-card border-r border-border transition-all duration-300 ease-in-out",
+    collapsed ? "w-[60px]" : "w-[240px]",
+    theme === 'cyber' && "cyber-card"
+  );
+  
   return (
-    <aside className={cn(
-      "sidebar h-screen fixed left-0 top-0 z-30 bg-card border-r border-border transition-all duration-300 ease-in-out",
-      collapsed ? "w-[60px]" : "w-[240px]"
-    )}>
+    <aside className={sidebarClasses}>
       <div className="flex items-center justify-between h-16 px-3 border-b border-border">
-        {!collapsed && <h2 className="text-lg font-semibold">Admin Portal</h2>}
+        {!collapsed && (
+          <h2 className={cn(
+            "text-lg font-semibold",
+            theme === 'cyber' && "text-primary font-mono tracking-wide"
+          )}>
+            Admin Portal
+          </h2>
+        )}
         <Button variant="ghost" size="sm" onClick={toggleSidebar} className="ml-auto">
           {collapsed ? <Menu size={18} /> : <X size={18} />}
         </Button>
@@ -49,6 +62,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
 const SidebarContent: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const { theme } = useTheme();
 
   const menuItems = [
     { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/admin' },
@@ -69,23 +83,43 @@ const SidebarContent: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
           (item.path === '/admin' && currentPath === '/admin') ||
           (item.path !== '/admin' && currentPath.startsWith(item.path));
           
+        const itemClasses = cn(
+          "flex items-center py-2 px-3 rounded-md text-foreground transition-colors",
+          isActive ? 
+            theme === 'cyber' ? 
+              "bg-primary/20 text-primary cyber-glow" : 
+              "bg-accent/50" 
+            : "hover:bg-accent/30 group",
+          theme === 'cyber' && "hover:bg-primary/10"
+        );
+          
         return (
           <Link 
             key={item.path}
             to={item.path}
-            className={cn(
-              "flex items-center py-2 px-3 rounded-md text-foreground hover:bg-accent group transition-colors",
-              isActive ? "bg-accent/50" : ""
-            )}
+            className={itemClasses}
           >
-            <span className="text-primary">{item.icon}</span>
+            <span className={cn(
+              isActive ? "text-primary" : "text-muted-foreground",
+              theme === 'cyber' && isActive && "text-foreground"
+            )}>
+              {item.icon}
+            </span>
             {!collapsed && (
-              <span className="ml-3 text-sm">{item.label}</span>
+              <span className={cn(
+                "ml-3 text-sm transition-all", 
+                isActive && "font-medium"
+              )}>
+                {item.label}
+              </span>
             )}
             {!collapsed && (
               <ChevronRight 
                 size={16} 
-                className="ml-auto text-muted-foreground/30 group-hover:text-muted-foreground/70 transition-colors"
+                className={cn(
+                  "ml-auto transition-colors",
+                  isActive ? "text-primary" : "text-muted-foreground/30 group-hover:text-muted-foreground/70"
+                )}
               />
             )}
           </Link>
