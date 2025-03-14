@@ -1,4 +1,6 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Lora:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -56,16 +58,16 @@
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 199 64% 73%;
+    --primary: 262 83% 58%;
     --primary-foreground: 240 5.9% 10%;
 
-    --secondary: 120 53% 75%;
+    --secondary: 217 91% 60%;
     --secondary-foreground: 0 0% 98%;
 
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
 
-    --accent: 140 48% 91%;
+    --accent: 291 64% 42%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -73,16 +75,58 @@
 
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 47 59% 50%;
+    --ring: 280 91% 77%;
 
     --sidebar-background: 240 10% 3.9%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 199 64% 73%;
+    --sidebar-primary: 262 83% 58%;
     --sidebar-primary-foreground: 240 5.9% 10%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 47 59% 50%;
+    --sidebar-ring: 280 91% 77%;
+  }
+
+  .cyber {
+    /* Cybermorphism theme */
+    --background: 221 39% 11%;
+    --foreground: 180 100% 60%;
+
+    --card: 217 33% 17%;
+    --card-foreground: 187 100% 42%;
+
+    --popover: 217 33% 17%;
+    --popover-foreground: 187 100% 42%;
+
+    --primary: 187 100% 42%;
+    --primary-foreground: 221 39% 11%;
+
+    --secondary: 263 85% 58%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 223 47% 20%;
+    --muted-foreground: 186 100% 69%;
+
+    --accent: 326 100% 60%;
+    --accent-foreground: 221 39% 11%;
+
+    --destructive: 0 91% 71%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 223 47% 20%;
+    --input: 223 47% 20%;
+    --ring: 187 100% 42%;
+
+    --sidebar-background: 221 39% 11%;
+    --sidebar-foreground: 187 100% 42%;
+    --sidebar-primary: 187 100% 42%;
+    --sidebar-primary-foreground: 221 39% 11%;
+    --sidebar-accent: 326 100% 60%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 223 47% 20%;
+    --sidebar-ring: 326 100% 60%;
+
+    --radius: 0.125rem;
   }
 }
 
@@ -97,8 +141,26 @@
     scroll-behavior: smooth;
   }
   
+  .dark html, .dark body {
+    font-family: 'Lora', serif;
+    @apply bg-background text-foreground;
+  }
+  
+  .cyber html, .cyber body {
+    font-family: 'Rajdhani', sans-serif;
+    @apply bg-background text-foreground;
+  }
+  
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
+  }
+  
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .cyber h1, .cyber h2, .cyber h3, .cyber h4, .cyber h5, .cyber h6 {
+    font-family: 'Orbitron', sans-serif;
   }
   
   /* Glass effect */
@@ -110,7 +172,11 @@
     @apply bg-black/50 backdrop-blur-md border border-white/10 shadow-soft;
   }
   
-  /* Transition classes */
+  .cyber-glass {
+    @apply bg-card/70 backdrop-blur-md border border-primary/30 shadow-[0_0_10px_rgba(0,255,255,0.3),inset_0_0_5px_rgba(0,255,255,0.2)];
+  }
+  
+  /* Custom transition class */
   .custom-transition {
     transition: all 300ms ease-in-out;
   }
@@ -121,7 +187,7 @@
   }
   
   .animated-underline::after {
-    @apply content-[''] absolute w-full scale-x-0 h-0.5 bottom-0 left-0 bg-soulseer-gold origin-bottom-right transition-transform duration-300;
+    @apply content-[''] absolute w-full scale-x-0 h-0.5 bottom-0 left-0 bg-soulseer-gold dark:bg-soulseer-blue cyber:bg-primary origin-bottom-right transition-transform duration-300;
   }
   
   .animated-underline:hover::after {
@@ -170,5 +236,71 @@
   
   .fade-in-section.is-visible {
     @apply opacity-100 translate-y-0;
+  }
+  
+  /* Cybermorphism specific styles */
+  .cyber-border {
+    @apply border border-primary/50 relative before:absolute before:inset-0 before:p-[1px] before:bg-gradient-to-r before:from-primary before:to-accent before:rounded-[inherit] before:content-[''] before:pointer-events-none;
+  }
+  
+  .cyber-card {
+    @apply bg-card border border-primary/20 shadow-[0_0_10px_rgba(0,255,255,0.2)];
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .cyber-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  }
+  
+  .cyber-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  
+  .cyber-glow {
+    @apply shadow-[0_0_10px_rgba(0,255,255,0.5),0_0_20px_rgba(0,255,255,0.3)];
+  }
+  
+  .cyber-text {
+    @apply font-mono tracking-wider;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+  }
+  
+  .cyber-grid {
+    background-size: 50px 50px;
+    background-image: 
+      linear-gradient(to right, rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+  }
+  
+  .cyber-button {
+    @apply relative overflow-hidden bg-card text-primary border border-primary/30 hover:bg-primary/10 transition-colors duration-300 px-4 py-2;
+  }
+  
+  .cyber-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .cyber-button:hover::before {
+    left: 100%;
   }
 }

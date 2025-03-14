@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, X, ChevronDown } from 'lucide-react';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,7 +32,7 @@ const Header: React.FC = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/90 backdrop-blur-md shadow-sm py-3'
+          ? 'bg-white/90 dark:bg-gray-900/90 cyber:bg-cyber-card backdrop-blur-md shadow-sm py-3'
           : 'bg-transparent py-5'
       }`}
     >
@@ -39,7 +40,7 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-semibold text-soulseer-gold tracking-tighter">
+            <span className="text-2xl font-semibold text-soulseer-gold dark:text-soulseer-blue cyber:text-cyber-accent tracking-tighter">
               SoulSeer
             </span>
           </Link>
@@ -53,8 +54,9 @@ const Header: React.FC = () => {
             <NavLink href="/shop">Shop</NavLink>
           </nav>
 
-          {/* Auth Buttons */}
+          {/* Auth Buttons and Theme Switcher */}
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeSwitcher />
             <Button variant="outline" asChild>
               <Link to="/login">Login</Link>
             </Button>
@@ -64,23 +66,26 @@ const Header: React.FC = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={toggleMobileMenu}
-            className="md:hidden focus:outline-none"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6 text-foreground" />
-            ) : (
-              <Menu className="h-6 w-6 text-foreground" />
-            )}
-          </button>
+          <div className="md:hidden flex items-center space-x-2">
+            <ThemeSwitcher />
+            <button
+              onClick={toggleMobileMenu}
+              className="focus:outline-none"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6 text-foreground" />
+              ) : (
+                <Menu className="h-6 w-6 text-foreground" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden absolute w-full bg-background border-b border-border/50 shadow-md transition-all duration-300 ease-in-out ${
+        className={`md:hidden absolute w-full bg-background dark:bg-gray-900 cyber:bg-cyber-background border-b border-border/50 shadow-md transition-all duration-300 ease-in-out ${
           isMobileMenuOpen
             ? 'max-h-screen opacity-100 visible py-5'
             : 'max-h-0 opacity-0 invisible py-0'
@@ -131,7 +136,7 @@ const NavLink: React.FC<NavLinkProps> = ({ href, children }) => {
   return (
     <Link
       to={href}
-      className="relative text-foreground hover:text-soulseer-gold transition-colors animated-underline font-medium text-sm tracking-wide"
+      className="relative text-foreground hover:text-soulseer-gold dark:hover:text-soulseer-blue cyber:hover:text-cyber-accent transition-colors animated-underline font-medium text-sm tracking-wide"
     >
       {children}
     </Link>
@@ -152,7 +157,7 @@ const MobileNavLink: React.FC<MobileNavLinkProps> = ({
   return (
     <Link
       to={href}
-      className="block py-2 text-foreground hover:text-soulseer-gold transition-colors text-base font-medium"
+      className="block py-2 text-foreground hover:text-soulseer-gold dark:hover:text-soulseer-blue cyber:hover:text-cyber-accent transition-colors text-base font-medium"
       onClick={onClick}
     >
       {children}

@@ -2,7 +2,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
-	darkMode: ["class"],
+	darkMode: ["class", '[class="dark"]'],
 	content: [
 		"./pages/**/*.{ts,tsx}",
 		"./components/**/*.{ts,tsx}",
@@ -69,6 +69,22 @@ export default {
 					green: '#90EE90',
 					cream: '#FFF8DC',
 					gold: '#D4AF37',
+				},
+				// Cyber theme specific colors
+				cyber: {
+					background: 'hsl(221 39% 11%)',
+					foreground: 'hsl(180 100% 60%)',
+					card: 'hsl(217 33% 17%)',
+					'card-foreground': 'hsl(187 100% 42%)',
+					primary: 'hsl(187 100% 42%)',
+					'primary-foreground': 'hsl(221 39% 11%)',
+					secondary: 'hsl(263 85% 58%)',
+					'secondary-foreground': 'hsl(0 0% 98%)',
+					accent: 'hsl(326 100% 60%)',
+					'accent-foreground': 'hsl(221 39% 11%)',
+					muted: 'hsl(223 47% 20%)',
+					'muted-foreground': 'hsl(186 100% 69%)',
+					border: 'hsl(223 47% 20%)',
 				}
 			},
 			borderRadius: {
@@ -120,6 +136,27 @@ export default {
 				'pulse-soft': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.8' }
+				},
+				'glow': {
+					'0%, 100%': { 
+						boxShadow: '0 0 5px rgba(0, 255, 255, 0.3), 0 0 10px rgba(0, 255, 255, 0.2)' 
+					},
+					'50%': { 
+						boxShadow: '0 0 20px rgba(0, 255, 255, 0.6), 0 0 30px rgba(0, 255, 255, 0.4)' 
+					}
+				},
+				'scanner': {
+					'0%': { 
+						transform: 'translateY(-100%)',
+						opacity: '0'
+					},
+					'50%': {
+						opacity: '0.5'
+					},
+					'100%': { 
+						transform: 'translateY(100%)',
+						opacity: '0'
+					}
 				}
 			},
 			animation: {
@@ -133,17 +170,23 @@ export default {
 				'slide-in-right': 'slide-in-right 0.3s ease-out',
 				'slide-out-right': 'slide-out-right 0.3s ease-out',
 				'float': 'float 6s ease-in-out infinite',
-				'pulse-soft': 'pulse-soft 3s ease-in-out infinite'
+				'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
+				'glow': 'glow 2s ease-in-out infinite',
+				'scanner': 'scanner 3s linear infinite'
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
 				'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-				'hero-pattern': 'url("/src/assets/hero-bg.png")'
+				'hero-pattern': 'url("/src/assets/hero-bg.png")',
+				'cyber-grid': 'linear-gradient(to right, rgba(0, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 255, 255, 0.1) 1px, transparent 1px)',
+				'cyber-gradient': 'linear-gradient(180deg, var(--tw-gradient-stops))'
 			},
 			boxShadow: {
 				'soft': '0 4px 20px rgba(0, 0, 0, 0.05)',
 				'medium': '0 8px 30px rgba(0, 0, 0, 0.1)',
-				'glow': '0 0 20px rgba(135, 206, 235, 0.5)'
+				'glow': '0 0 20px rgba(135, 206, 235, 0.5)',
+				'cyber': '0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.3)',
+				'cyber-inner': 'inset 0 0 5px rgba(0, 255, 255, 0.2)'
 			},
 			typography: {
 				DEFAULT: {
