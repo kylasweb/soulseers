@@ -108,7 +108,7 @@ const AdminSocial = () => {
                               <span className="text-xs text-muted-foreground ml-2">Posted 2 days ago</span>
                             </div>
                             <div className="text-sm">
-                              <p className="mb-4">I just had my first reading with a SoulSeer spiritualist, and it was incredible! I've gained so much clarity about my path. Has anyone else tried this service?</p>
+                              <p className="mb-4">I just had my first reading with a SoulSeer spiritualist, and it was incredible! I&apos;ve gained so much clarity about my path. Has anyone else tried this service?</p>
                               <div className="rounded-md bg-muted p-2 mb-4">
                                 <p className="text-xs font-medium">Metadata:</p>
                                 <p className="text-xs text-muted-foreground">Service referenced: Spiritual Reading</p>
@@ -137,7 +137,7 @@ const AdminSocial = () => {
                                     <span className="text-xs font-medium ml-2">Emily Nguyen</span>
                                     <span className="text-xs text-muted-foreground ml-2">1 day ago</span>
                                   </div>
-                                  <p className="text-xs mt-1">Which reader did you choose? I'm thinking of booking a session.</p>
+                                  <p className="text-xs mt-1">Which reader did you choose? I&apos;m thinking of booking a session.</p>
                                 </div>
                               </div>
                             </div>
@@ -198,7 +198,7 @@ const AdminSocial = () => {
                           </div>
                           <div className="mt-2">
                             <p className="text-sm line-clamp-2">
-                              {postId === 'post1' ? 'I just had my first reading with a SoulSeer spiritualist, and it was incredible! I've gained so much clarity about my path. Has anyone else tried...' : 
+                              {postId === 'post1' ? 'I just had my first reading with a SoulSeer spiritualist, and it was incredible! I&apos;ve gained so much clarity about my path. Has anyone else tried...' : 
                                postId === 'post2' ? 'Looking for recommendations on which crystal set to purchase for a beginner. Any suggestions from the community?' : 
                                postId === 'post3' ? 'This service is a complete scam. They charged me and then canceled my appointment without any explanation.' : 
                                postId === 'post4' ? 'Just completed my third session and feeling so enlightened. The journey has been incredible so far.' : 
@@ -277,7 +277,7 @@ const AdminSocial = () => {
                                   'This meditation technique changed my life! Highly recommend it to everyone.',
                                   'Has anyone tried the advanced reading package? Is it worth the extra cost?',
                                   'This is completely false advertising. The reader was not able to connect with my energy at all.',
-                                  'Thank you for sharing your experience. I've been considering this service for a while.',
+                                  'Thank you for sharing your experience. I&apos;ve been considering this service for a while.',
                                   'The customer service team was very helpful when I had issues with my booking.'
                                 ][i]}
                               </p>
@@ -393,11 +393,13 @@ const AdminSocial = () => {
                               </p>
                               <div className="flex items-center mt-2 text-xs text-muted-foreground">
                                 <Calendar className="h-3 w-3 mr-1" />
-                                <span>{[
-                                  'Scheduled for: Tomorrow at 9:00 AM',
-                                  'Scheduled for: Oct 18, 2023 at 12:00 PM',
-                                  'Scheduled for: Oct 25, 2023 at 8:00 AM'
-                                ][i]}</span>
+                                <span>
+                                  {[
+                                    'Scheduled for: Tomorrow at 9:00 AM',
+                                    'Scheduled for: Oct 18, 2023 at 12:00 PM',
+                                    'Scheduled for: Oct 25, 2023 at 8:00 AM'
+                                  ][i]}
+                                </span>
                               </div>
                               <div className="flex items-center gap-2 mt-3">
                                 <Button variant="outline" size="sm">Edit</Button>
@@ -422,3 +424,4 @@ const AdminSocial = () => {
 };
 
 export default AdminSocial;
+
