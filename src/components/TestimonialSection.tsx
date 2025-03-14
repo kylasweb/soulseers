@@ -9,7 +9,7 @@ const testimonials = [
     id: 1,
     name: 'Sarah J.',
     location: 'New York, USA',
-    text: 'My reading with Luna was transformative. She provided insights that helped me navigate a difficult career transition with confidence and clarity. I've been a regular client ever since.',
+    text: 'My reading with Luna was transformative. She provided insights that helped me navigate a difficult career transition with confidence and clarity. I\'ve been a regular client ever since.',
     image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     rating: 5,
     date: '2 months ago'
@@ -27,7 +27,7 @@ const testimonials = [
     id: 3,
     name: 'Elena R.',
     location: 'Barcelona, Spain',
-    text: 'Willow's intuitive healing session brought me a sense of peace I haven't felt in years. Her ability to identify and clear energy blockages is remarkable. I feel more centered and aligned with my purpose.',
+    text: 'Willow\'s intuitive healing session brought me a sense of peace I haven\'t felt in years. Her ability to identify and clear energy blockages is remarkable. I feel more centered and aligned with my purpose.',
     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     rating: 4,
     date: '2 weeks ago'
@@ -36,7 +36,7 @@ const testimonials = [
     id: 4,
     name: 'David K.',
     location: 'Toronto, Canada',
-    text: 'Jasper's reading was spot on in every way. He connected with aspects of my life that were incredibly specific, and his guidance has helped me make important decisions with confidence. Highly recommended!',
+    text: 'Jasper\'s reading was spot on in every way. He connected with aspects of my life that were incredibly specific, and his guidance has helped me make important decisions with confidence. Highly recommended!',
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     rating: 5,
     date: '3 weeks ago'
