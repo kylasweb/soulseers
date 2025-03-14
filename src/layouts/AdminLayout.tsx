@@ -17,7 +17,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
   
   return (
-    <div className={`min-h-screen flex w-full ${theme === 'cyber' ? 'cyber-grid' : ''}`}>
+    <div className={`min-h-screen flex w-full bg-background ${theme === 'cyber' ? 'cyber-grid' : ''}`}>
       <AdminSidebar collapsed={!open} toggleSidebar={toggleSidebar} />
       <main 
         className={`flex-1 p-6 overflow-auto transition-all duration-300 ease-in-out ${
