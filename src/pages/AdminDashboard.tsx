@@ -1,10 +1,6 @@
 
 import React from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Activity, Users, FileText, BarChart3, Settings } from 'lucide-react';
-import AdminLoginInfo from '@/components/AdminLoginInfo';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import AdminOverview from '@/components/admin/AdminOverview';
@@ -13,6 +9,9 @@ import AdminContent from '@/components/admin/AdminContent';
 import AdminAnalytics from '@/components/admin/AdminAnalytics';
 import AdminSettings from '@/components/admin/AdminSettings';
 import AdminSecurity from '@/components/admin/AdminSecurity';
+import AdminFrontend from '@/components/admin/AdminFrontend';
+import AdminPayments from '@/components/admin/AdminPayments';
+import AdminSocial from '@/components/admin/AdminSocial';
 
 const AdminDashboard = () => {
   const location = useLocation();
@@ -21,6 +20,9 @@ const AdminDashboard = () => {
   // Determine which tab should be active based on the current path
   const getActiveTab = () => {
     if (currentPath.includes('/admin/users')) return 'users';
+    if (currentPath.includes('/admin/frontend')) return 'frontend';
+    if (currentPath.includes('/admin/payments')) return 'payments';
+    if (currentPath.includes('/admin/social')) return 'social';
     if (currentPath.includes('/admin/content')) return 'content';
     if (currentPath.includes('/admin/analytics')) return 'analytics';
     if (currentPath.includes('/admin/settings')) return 'settings';
@@ -34,6 +36,9 @@ const AdminDashboard = () => {
         <Routes>
           <Route path="/" element={<AdminOverview />} />
           <Route path="/users" element={<AdminUsers />} />
+          <Route path="/frontend" element={<AdminFrontend />} />
+          <Route path="/payments" element={<AdminPayments />} />
+          <Route path="/social" element={<AdminSocial />} />
           <Route path="/content" element={<AdminContent />} />
           <Route path="/analytics" element={<AdminAnalytics />} />
           <Route path="/settings" element={<AdminSettings />} />

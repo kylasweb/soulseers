@@ -7,7 +7,10 @@ import {
   FileText, 
   BarChart, 
   Settings, 
-  Shield, 
+  Shield,
+  Pencil,
+  CreditCard,
+  Share,
   ChevronRight, 
   Menu, 
   X 
@@ -50,6 +53,9 @@ const SidebarContent: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
   const menuItems = [
     { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/admin' },
     { icon: <Users size={18} />, label: 'User Management', path: '/admin/users' },
+    { icon: <Pencil size={18} />, label: 'Frontend Manager', path: '/admin/frontend' },
+    { icon: <CreditCard size={18} />, label: 'Payment Management', path: '/admin/payments' },
+    { icon: <Share size={18} />, label: 'Social Media Manager', path: '/admin/social' },
     { icon: <FileText size={18} />, label: 'Content Management', path: '/admin/content' },
     { icon: <BarChart size={18} />, label: 'Analytics', path: '/admin/analytics' },
     { icon: <Settings size={18} />, label: 'System Settings', path: '/admin/settings' },
