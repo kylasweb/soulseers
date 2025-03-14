@@ -47,6 +47,7 @@ const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
+            <NavLink href="/about">About</NavLink>
             <NavLink href="/readings">Book Reading</NavLink>
             <NavLink href="/sessions">Live Sessions</NavLink>
             <NavLink href="/services">Services</NavLink>
@@ -93,6 +94,9 @@ const Header: React.FC = () => {
       >
         <div className="container mx-auto px-4">
           <nav className="flex flex-col space-y-4 mb-6">
+            <MobileNavLink href="/about" onClick={toggleMobileMenu}>
+              About
+            </MobileNavLink>
             <MobileNavLink href="/readings" onClick={toggleMobileMenu}>
               Book Reading
             </MobileNavLink>
