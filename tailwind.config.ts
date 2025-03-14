@@ -1,5 +1,7 @@
 
 import type { Config } from "tailwindcss";
+// Import our custom plugin
+import cyberVariantPlugin from "./src/lib/cyber-variant-plugin";
 
 export default {
 	darkMode: ["class", '[class="dark"]'],
@@ -212,5 +214,8 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		require("./src/lib/cyber-variant-plugin") 
+	],
 } satisfies Config;
