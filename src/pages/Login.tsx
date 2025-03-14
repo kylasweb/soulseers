@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { Link, useNavigate } from 'react-router-dom';
-import { Facebook, Twitter, Google } from 'lucide-react';
+import { Facebook, Twitter, Globe } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -91,7 +91,7 @@ const Login = () => {
                   <span className="sr-only md:not-sr-only md:text-xs">Twitter</span>
                 </Button>
                 <Button variant="outline" className="w-full">
-                  <Google className="h-4 w-4 mr-2" />
+                  <Globe className="h-4 w-4 mr-2" />
                   <span className="sr-only md:not-sr-only md:text-xs">Google</span>
                 </Button>
               </div>
