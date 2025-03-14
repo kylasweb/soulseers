@@ -13,7 +13,7 @@ import {
   X 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface AdminSidebarProps {
   collapsed: boolean;
@@ -44,6 +44,9 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
 };
 
 const SidebarContent: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const menuItems = [
     { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/admin' },
     { icon: <Users size={18} />, label: 'User Management', path: '/admin/users' },
@@ -55,27 +58,33 @@ const SidebarContent: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
 
   return (
     <nav className="px-2 space-y-1">
-      {menuItems.map((item, index) => (
-        <Link 
-          key={index}
-          to={item.path}
-          className={cn(
-            "flex items-center py-2 px-3 rounded-md text-foreground hover:bg-accent group transition-colors",
-            index === 0 ? "bg-accent/50" : ""
-          )}
-        >
-          <span className="text-primary">{item.icon}</span>
-          {!collapsed && (
-            <span className="ml-3 text-sm">{item.label}</span>
-          )}
-          {!collapsed && (
-            <ChevronRight 
-              size={16} 
-              className="ml-auto text-muted-foreground/30 group-hover:text-muted-foreground/70 transition-colors"
-            />
-          )}
-        </Link>
-      ))}
+      {menuItems.map((item) => {
+        const isActive = 
+          (item.path === '/admin' && currentPath === '/admin') ||
+          (item.path !== '/admin' && currentPath.startsWith(item.path));
+          
+        return (
+          <Link 
+            key={item.path}
+            to={item.path}
+            className={cn(
+              "flex items-center py-2 px-3 rounded-md text-foreground hover:bg-accent group transition-colors",
+              isActive ? "bg-accent/50" : ""
+            )}
+          >
+            <span className="text-primary">{item.icon}</span>
+            {!collapsed && (
+              <span className="ml-3 text-sm">{item.label}</span>
+            )}
+            {!collapsed && (
+              <ChevronRight 
+                size={16} 
+                className="ml-auto text-muted-foreground/30 group-hover:text-muted-foreground/70 transition-colors"
+              />
+            )}
+          </Link>
+        );
+      })}
     </nav>
   );
 };
