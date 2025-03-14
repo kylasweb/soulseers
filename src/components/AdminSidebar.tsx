@@ -13,6 +13,7 @@ import {
   X 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface AdminSidebarProps {
   collapsed: boolean;
@@ -25,7 +26,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
 }) => {
   return (
     <aside className={cn(
-      "sidebar h-screen fixed left-0 top-0 z-30 bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out",
+      "sidebar h-screen fixed left-0 top-0 z-30 bg-card border-r border-border transition-all duration-300 ease-in-out",
       collapsed ? "w-[60px]" : "w-[240px]"
     )}>
       <div className="flex items-center justify-between h-16 px-3 border-b border-border">
@@ -55,25 +56,25 @@ const SidebarContent: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
   return (
     <nav className="px-2 space-y-1">
       {menuItems.map((item, index) => (
-        <a 
+        <Link 
           key={index}
-          href={item.path}
+          to={item.path}
           className={cn(
-            "flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent group transition-colors",
-            index === 0 ? "bg-sidebar-accent/50" : ""
+            "flex items-center py-2 px-3 rounded-md text-foreground hover:bg-accent group transition-colors",
+            index === 0 ? "bg-accent/50" : ""
           )}
         >
-          <span className="text-sidebar-primary">{item.icon}</span>
+          <span className="text-primary">{item.icon}</span>
           {!collapsed && (
             <span className="ml-3 text-sm">{item.label}</span>
           )}
           {!collapsed && (
             <ChevronRight 
               size={16} 
-              className="ml-auto text-sidebar-foreground/30 group-hover:text-sidebar-foreground/70 transition-colors"
+              className="ml-auto text-muted-foreground/30 group-hover:text-muted-foreground/70 transition-colors"
             />
           )}
-        </a>
+        </Link>
       ))}
     </nav>
   );
