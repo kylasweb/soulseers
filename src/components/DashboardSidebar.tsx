@@ -1,141 +1,81 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
-import {
-  Home,
-  Calendar,
-  Users,
-  User,
-  Settings,
-  Star,
-  MessageSquare,
-  Heart,
-  LogOut,
-  ChevronsLeft,
-  ChevronsRight,
-} from 'lucide-react';
+import { cn } from "@/lib/utils";
+import { 
+  Home, 
+  Calendar, 
+  Users, 
+  MessageSquare, 
+  Heart, 
+  Settings, 
+  ChevronRight, 
+  Menu, 
+  X 
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const DashboardSidebar: React.FC = () => {
-  const location = useLocation();
+interface DashboardSidebarProps {
+  collapsed: boolean;
+  toggleSidebar: () => void;
+}
 
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
+const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ 
+  collapsed,
+  toggleSidebar
+}) => {
+  return (
+    <aside className={cn(
+      "sidebar h-screen fixed left-0 top-0 z-30 bg-sidebar transition-all duration-300 ease-in-out",
+      collapsed ? "w-[60px]" : "w-[240px]"
+    )}>
+      <div className="flex items-center justify-between h-16 px-3 border-b border-border">
+        {!collapsed && <h2 className="text-lg font-semibold">SoulSeer</h2>}
+        <Button variant="ghost" size="sm" onClick={toggleSidebar} className="ml-auto">
+          {collapsed ? <Menu size={18} /> : <X size={18} />}
+        </Button>
+      </div>
+
+      <div className="py-4">
+        <SidebarContent collapsed={collapsed} />
+      </div>
+    </aside>
+  );
+};
+
+const SidebarContent: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
+  const menuItems = [
+    { icon: <Home size={18} />, label: 'Dashboard', path: '/dashboard' },
+    { icon: <Calendar size={18} />, label: 'My Sessions', path: '/dashboard/sessions' },
+    { icon: <Heart size={18} />, label: 'Favorite Readers', path: '/dashboard/favorites' },
+    { icon: <Users size={18} />, label: 'Community', path: '/dashboard/community' },
+    { icon: <MessageSquare size={18} />, label: 'Messages', path: '/dashboard/messages' },
+    { icon: <Settings size={18} />, label: 'Settings', path: '/dashboard/settings' },
+  ];
 
   return (
-    <Sidebar className="border-r border-border/50">
-      <SidebarHeader className="p-4 flex items-center justify-between">
-        <Link to="/dashboard" className="flex items-center">
-          <span className="text-xl font-semibold text-soulseer-gold">SoulSeer</span>
-        </Link>
-        <SidebarTrigger className="overflow-hidden">
-          {({ collapsed }) => (
-            <button className="rounded-full p-2 hover:bg-accent transition-colors">
-              {collapsed ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
-            </button>
+    <nav className="px-2 space-y-1">
+      {menuItems.map((item, index) => (
+        <a 
+          key={index}
+          href={item.path}
+          className={cn(
+            "flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent group transition-colors",
+            index === 0 ? "bg-sidebar-accent/50" : ""
           )}
-        </SidebarTrigger>
-      </SidebarHeader>
-
-      <SidebarContent className="py-4">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className={isActive('/dashboard') ? 'bg-accent' : ''}>
-              <Link to="/dashboard" className="flex items-center">
-                <Home size={18} className="mr-2" />
-                <span>Dashboard</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className={isActive('/dashboard/sessions') ? 'bg-accent' : ''}>
-              <Link to="/dashboard/sessions" className="flex items-center">
-                <Calendar size={18} className="mr-2" />
-                <span>My Sessions</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className={isActive('/dashboard/readers') ? 'bg-accent' : ''}>
-              <Link to="/dashboard/readers" className="flex items-center">
-                <Star size={18} className="mr-2" />
-                <span>Favorite Readers</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className={isActive('/dashboard/community') ? 'bg-accent' : ''}>
-              <Link to="/dashboard/community" className="flex items-center">
-                <Users size={18} className="mr-2" />
-                <span>Community</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className={isActive('/dashboard/forums') ? 'bg-accent' : ''}>
-              <Link to="/dashboard/forums" className="flex items-center">
-                <MessageSquare size={18} className="mr-2" />
-                <span>Forums</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className={isActive('/dashboard/journey') ? 'bg-accent' : ''}>
-              <Link to="/dashboard/journey" className="flex items-center">
-                <Heart size={18} className="mr-2" />
-                <span>Spiritual Journey</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className={isActive('/dashboard/profile') ? 'bg-accent' : ''}>
-              <Link to="/dashboard/profile" className="flex items-center">
-                <User size={18} className="mr-2" />
-                <span>Profile</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className={isActive('/dashboard/settings') ? 'bg-accent' : ''}>
-              <Link to="/dashboard/settings" className="flex items-center">
-                <Settings size={18} className="mr-2" />
-                <span>Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarContent>
-
-      <SidebarFooter className="p-4 border-t border-border/50">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link to="/logout" className="flex items-center text-muted-foreground hover:text-foreground">
-                <LogOut size={18} className="mr-2" />
-                <span>Logout</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+        >
+          <span className="text-sidebar-primary">{item.icon}</span>
+          {!collapsed && (
+            <span className="ml-3 text-sm">{item.label}</span>
+          )}
+          {!collapsed && (
+            <ChevronRight 
+              size={16} 
+              className="ml-auto text-sidebar-foreground/30 group-hover:text-sidebar-foreground/70 transition-colors"
+            />
+          )}
+        </a>
+      ))}
+    </nav>
   );
 };
 

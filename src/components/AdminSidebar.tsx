@@ -1,221 +1,81 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarTrigger,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-} from '@/components/ui/sidebar';
-import {
-  LayoutDashboard,
-  Users,
-  FileText,
-  BarChart2,
-  Settings,
-  Shield,
-  LogOut,
-  ChevronsLeft,
-  ChevronsRight,
-  UserCog,
-  ShoppingBag,
-  Calendar,
-  MessageSquare,
-  BookOpen,
-  Bell,
-  Lock,
-  Database,
-} from 'lucide-react';
+import { cn } from "@/lib/utils";
+import { 
+  LayoutDashboard, 
+  Users, 
+  FileText, 
+  BarChart, 
+  Settings, 
+  Shield, 
+  ChevronRight, 
+  Menu, 
+  X 
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const AdminSidebar: React.FC = () => {
-  const location = useLocation();
+interface AdminSidebarProps {
+  collapsed: boolean;
+  toggleSidebar: () => void;
+}
 
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
+const AdminSidebar: React.FC<AdminSidebarProps> = ({ 
+  collapsed,
+  toggleSidebar
+}) => {
+  return (
+    <aside className={cn(
+      "sidebar h-screen fixed left-0 top-0 z-30 bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out",
+      collapsed ? "w-[60px]" : "w-[240px]"
+    )}>
+      <div className="flex items-center justify-between h-16 px-3 border-b border-border">
+        {!collapsed && <h2 className="text-lg font-semibold">Admin Portal</h2>}
+        <Button variant="ghost" size="sm" onClick={toggleSidebar} className="ml-auto">
+          {collapsed ? <Menu size={18} /> : <X size={18} />}
+        </Button>
+      </div>
+
+      <div className="py-4">
+        <SidebarContent collapsed={collapsed} />
+      </div>
+    </aside>
+  );
+};
+
+const SidebarContent: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
+  const menuItems = [
+    { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/admin' },
+    { icon: <Users size={18} />, label: 'User Management', path: '/admin/users' },
+    { icon: <FileText size={18} />, label: 'Content Management', path: '/admin/content' },
+    { icon: <BarChart size={18} />, label: 'Analytics', path: '/admin/analytics' },
+    { icon: <Settings size={18} />, label: 'System Settings', path: '/admin/settings' },
+    { icon: <Shield size={18} />, label: 'Security', path: '/admin/security' },
+  ];
 
   return (
-    <Sidebar className="border-r border-border/50">
-      <SidebarHeader className="p-4 flex items-center justify-between">
-        <Link to="/admin" className="flex items-center">
-          <span className="text-xl font-semibold text-soulseer-gold">SoulSeer Admin</span>
-        </Link>
-        <SidebarTrigger className="overflow-hidden">
-          {({ collapsed }) => (
-            <button className="rounded-full p-2 hover:bg-accent transition-colors">
-              {collapsed ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
-            </button>
+    <nav className="px-2 space-y-1">
+      {menuItems.map((item, index) => (
+        <a 
+          key={index}
+          href={item.path}
+          className={cn(
+            "flex items-center py-2 px-3 rounded-md text-sidebar-foreground hover:bg-sidebar-accent group transition-colors",
+            index === 0 ? "bg-sidebar-accent/50" : ""
           )}
-        </SidebarTrigger>
-      </SidebarHeader>
-
-      <SidebarContent className="py-4">
-        <SidebarGroup>
-          <SidebarGroupLabel>Overview</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin') ? 'bg-accent' : ''}>
-                  <Link to="/admin" className="flex items-center">
-                    <LayoutDashboard size={18} className="mr-2" />
-                    <span>Dashboard</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>User Management</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/users') ? 'bg-accent' : ''}>
-                  <Link to="/admin/users" className="flex items-center">
-                    <Users size={18} className="mr-2" />
-                    <span>All Users</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/readers') ? 'bg-accent' : ''}>
-                  <Link to="/admin/readers" className="flex items-center">
-                    <UserCog size={18} className="mr-2" />
-                    <span>Readers</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>Content Management</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/services') ? 'bg-accent' : ''}>
-                  <Link to="/admin/services" className="flex items-center">
-                    <FileText size={18} className="mr-2" />
-                    <span>Services</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/blog') ? 'bg-accent' : ''}>
-                  <Link to="/admin/blog" className="flex items-center">
-                    <BookOpen size={18} className="mr-2" />
-                    <span>Blog</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/shop') ? 'bg-accent' : ''}>
-                  <Link to="/admin/shop" className="flex items-center">
-                    <ShoppingBag size={18} className="mr-2" />
-                    <span>Shop</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/community') ? 'bg-accent' : ''}>
-                  <Link to="/admin/community" className="flex items-center">
-                    <MessageSquare size={18} className="mr-2" />
-                    <span>Community</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/events') ? 'bg-accent' : ''}>
-                  <Link to="/admin/events" className="flex items-center">
-                    <Calendar size={18} className="mr-2" />
-                    <span>Events</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>System</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/analytics') ? 'bg-accent' : ''}>
-                  <Link to="/admin/analytics" className="flex items-center">
-                    <BarChart2 size={18} className="mr-2" />
-                    <span>Analytics</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/notifications') ? 'bg-accent' : ''}>
-                  <Link to="/admin/notifications" className="flex items-center">
-                    <Bell size={18} className="mr-2" />
-                    <span>Notifications</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/settings') ? 'bg-accent' : ''}>
-                  <Link to="/admin/settings" className="flex items-center">
-                    <Settings size={18} className="mr-2" />
-                    <span>Settings</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/database') ? 'bg-accent' : ''}>
-                  <Link to="/admin/database" className="flex items-center">
-                    <Database size={18} className="mr-2" />
-                    <span>Database</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/admin/security') ? 'bg-accent' : ''}>
-                  <Link to="/admin/security" className="flex items-center">
-                    <Shield size={18} className="mr-2" />
-                    <span>Security</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-
-      <SidebarFooter className="p-4 border-t border-border/50">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link to="/logout" className="flex items-center text-muted-foreground hover:text-foreground">
-                <LogOut size={18} className="mr-2" />
-                <span>Logout</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+        >
+          <span className="text-sidebar-primary">{item.icon}</span>
+          {!collapsed && (
+            <span className="ml-3 text-sm">{item.label}</span>
+          )}
+          {!collapsed && (
+            <ChevronRight 
+              size={16} 
+              className="ml-auto text-sidebar-foreground/30 group-hover:text-sidebar-foreground/70 transition-colors"
+            />
+          )}
+        </a>
+      ))}
+    </nav>
   );
 };
 
