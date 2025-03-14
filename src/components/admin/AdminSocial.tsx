@@ -9,9 +9,11 @@ import PostDetail from './social/PostDetail';
 import CommentsList from './social/CommentsList';
 import ReportsList from './social/ReportsList';
 import ScheduledContent from './social/ScheduledContent';
+import { useSocialManagement } from '@/hooks/use-social-management';
 
 const AdminSocial = () => {
   const [selectedPost, setSelectedPost] = useState<string | null>(null);
+  const socialManagement = useSocialManagement();
 
   const handleSelectPost = (postId: string) => {
     setSelectedPost(postId);
@@ -54,15 +56,32 @@ const AdminSocial = () => {
             <TabsContent value="posts">
               <div className="space-y-4">
                 {selectedPost ? (
-                  <PostDetail postId={selectedPost} onBack={handleBackToPosts} />
+                  <PostDetail 
+                    postId={selectedPost} 
+                    onBack={handleBackToPosts}
+                    onMarkFeatured={() => socialManagement.markAsFeatured(selectedPost)}
+                    onRemovePost={() => {
+                      socialManagement.removePost(selectedPost);
+                      handleBackToPosts();
+                    }}
+                    onSubmitResponse={(response) => 
+                      socialManagement.submitAdminResponse({ 
+                        postId: selectedPost, 
+                        response 
+                      })
+                    }
+                  />
                 ) : (
-                  <PostList onSelectPost={handleSelectPost} />
+                  <PostList 
+                    onSelectPost={handleSelectPost}
+                    onRefresh={socialManagement.refreshData} 
+                  />
                 )}
               </div>
             </TabsContent>
             
             <TabsContent value="comments">
-              <CommentsList />
+              <CommentsList onRefresh={socialManagement.refreshData} />
             </TabsContent>
             
             <TabsContent value="reports">
