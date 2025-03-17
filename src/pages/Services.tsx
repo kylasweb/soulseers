@@ -1,11 +1,11 @@
-
 import React from 'react';
 import MainLayout from '@/layouts/MainLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle, Star, ShieldCheck, Clock } from 'lucide-react';
+import { CheckCircle, Star, ShieldCheck, Clock, VideoIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import ConsultationService from '@/components/services/ConsultationService';
 
 const Services = () => {
   return (
@@ -22,6 +22,7 @@ const Services = () => {
           <div className="flex justify-center mb-8">
             <TabsList>
               <TabsTrigger value="services">Core Services</TabsTrigger>
+              <TabsTrigger value="consultations">Live Consultations</TabsTrigger>
               <TabsTrigger value="packages">Packages</TabsTrigger>
               <TabsTrigger value="specialty">Specialty Services</TabsTrigger>
             </TabsList>
@@ -32,6 +33,64 @@ const Services = () => {
               {coreServices.map((service) => (
                 <ServiceCard key={service.id} service={service} />
               ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="consultations" className="space-y-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-2">Pay-Per-Minute Live Consultations</h2>
+              <p className="text-muted-foreground mb-6">
+                Connect with our experts in real-time through video consultations. Pay only for the time you use.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {consultationServices.map((service) => (
+                  <ConsultationService 
+                    key={service.id}
+                    title={service.title}
+                    description={service.description}
+                    rate={service.rate}
+                    minDuration={service.minDuration}
+                    isAvailable={service.isAvailable}
+                    expertName={service.expertName}
+                    expertImage={service.expertImage}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            <div className="bg-primary/5 rounded-lg p-6 md:p-8">
+              <div className="max-w-3xl mx-auto">
+                <h3 className="text-xl font-bold mb-4 flex items-center">
+                  <VideoIcon className="h-5 w-5 mr-2 text-primary" />
+                  How Our Pay-Per-Minute Consultations Work
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  <div className="bg-card p-4 rounded-lg">
+                    <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold mb-3">1</div>
+                    <h4 className="font-medium mb-2">Choose an Expert</h4>
+                    <p className="text-sm text-muted-foreground">Select from our available experts based on their specialties and ratings.</p>
+                  </div>
+                  <div className="bg-card p-4 rounded-lg">
+                    <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold mb-3">2</div>
+                    <h4 className="font-medium mb-2">Start Your Session</h4>
+                    <p className="text-sm text-muted-foreground">Enter your payment details and connect with your chosen expert via video.</p>
+                  </div>
+                  <div className="bg-card p-4 rounded-lg">
+                    <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold mb-3">3</div>
+                    <h4 className="font-medium mb-2">Pay Only For What You Use</h4>
+                    <p className="text-sm text-muted-foreground">You're billed per minute for the duration of your consultation.</p>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button asChild>
+                    <Link to="/consultations/booking">Book a Consultation</Link>
+                  </Button>
+                  <Button variant="outline" asChild>
+                    <Link to="/consultations/experts">View All Experts</Link>
+                  </Button>
+                </div>
+              </div>
             </div>
           </TabsContent>
 
@@ -305,6 +364,39 @@ const servicePackages = [
     ],
     popular: false,
     linkUrl: "/packages/monthly"
+  }
+];
+
+const consultationServices = [
+  {
+    id: '1',
+    title: 'Live Psychic Reading',
+    description: 'One-on-one live video consultation with our experienced psychic readers. Get immediate insights and guidance.',
+    rate: 2.99,
+    minDuration: 15,
+    isAvailable: true,
+    expertName: 'Alexandra Rivers',
+    expertImage: '/placeholder.svg',
+  },
+  {
+    id: '2',
+    title: 'Tarot Card Analysis',
+    description: 'Live tarot card reading sessions with real-time interpretation and guidance through video consultation.',
+    rate: 3.49,
+    minDuration: 10,
+    isAvailable: false,
+    expertName: 'David Thompson',
+    expertImage: '/placeholder.svg',
+  },
+  {
+    id: '3',
+    title: 'Astrology Consultation',
+    description: 'Get personalized astrological insights from our experts through a pay-per-minute video session.',
+    rate: 2.99,
+    minDuration: 20,
+    isAvailable: true,
+    expertName: 'Maria Garcia',
+    expertImage: '/placeholder.svg',
   }
 ];
 
