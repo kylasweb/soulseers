@@ -8,6 +8,15 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 
+// Define a more specific type for message senders
+type MessageSender = 'user' | 'expert';
+
+// Define the message type
+interface ChatMessage {
+  sender: MessageSender;
+  text: string;
+}
+
 const ConsultationSession = () => {
   const [sessionTime, setSessionTime] = useState(0);
   const [isRunning, setIsRunning] = useState(true);
@@ -15,7 +24,7 @@ const ConsultationSession = () => {
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<{ sender: 'user' | 'expert', text: string }[]>([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     { sender: 'expert', text: 'Hello, how can I help you today?' }
   ]);
   const [communicationType, setCommunicationType] = useState<"audio" | "video" | "chat">("video");
@@ -231,8 +240,8 @@ const ConsultationSession = () => {
   const sendMessage = () => {
     if (!message.trim()) return;
     
-    // Add message to local state
-    const newMessage = { sender: 'user', text: message };
+    // Add message to local state with correct typing
+    const newMessage: ChatMessage = { sender: 'user', text: message };
     setMessages(prev => [...prev, newMessage]);
     
     // In a real app, this would send the message to the expert via WebRTC data channel
@@ -249,7 +258,14 @@ const ConsultationSession = () => {
         "Have you considered looking at this from a different perspective?"
       ];
       const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-      setMessages(prev => [...prev, { sender: 'expert', text: randomResponse }]);
+      
+      // Use proper typing for the expert message
+      const expertMessage: ChatMessage = { 
+        sender: 'expert', 
+        text: randomResponse 
+      };
+      
+      setMessages(prev => [...prev, expertMessage]);
       
       // Scroll to the bottom of the chat
       if (chatPanelRef.current) {
