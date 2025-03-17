@@ -15,7 +15,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
-import { FileUpload, Upload } from 'lucide-react';
+import { Upload, UserCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const readerSchema = z.object({
@@ -204,7 +204,7 @@ const ReaderSignup = () => {
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <FileUpload className="h-8 w-8 text-gray-400" />
+                            <UserCircle className="h-8 w-8 text-gray-400" />
                           )}
                         </div>
                         <Button type="button" variant="outline" asChild>
