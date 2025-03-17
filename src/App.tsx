@@ -9,7 +9,9 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ReaderSignup from "./pages/ReaderSignup";
 import Dashboard from "./pages/Dashboard";
+import ReaderDashboard from "./pages/ReaderDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
 import Community from "./pages/Community";
@@ -34,7 +36,9 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/reader/signup" element={<ReaderSignup />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/reader/dashboard" element={<ReaderDashboard />} />
             <Route path="/admin/*" element={<AdminDashboard />} />
             <Route path="/about" element={<About />} />
             <Route path="/community" element={<Community />} />
