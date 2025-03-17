@@ -52,7 +52,7 @@ const ScheduledContent: React.FC = () => {
                   <div className="flex-1">
                     <div className="flex flex-col sm:flex-row sm:justify-between">
                       <p className="text-sm font-medium">{post.title}</p>
-                      <Badge className="mt-1 sm:mt-0 w-fit" variant={post.status === 'Scheduled' ? 'secondary' : 'outline'}>
+                      <Badge className="mt-1 sm:mt-0 w-fit" variant={post.status === "scheduled" ? 'secondary' : 'outline'}>
                         {post.status}
                       </Badge>
                     </div>
