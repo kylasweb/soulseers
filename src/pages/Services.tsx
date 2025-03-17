@@ -1,11 +1,13 @@
+
 import React from 'react';
 import MainLayout from '@/layouts/MainLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle, Star, ShieldCheck, Clock, VideoIcon } from 'lucide-react';
+import { CheckCircle, Star, ShieldCheck, Clock, VideoIcon, MicIcon, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ConsultationService from '@/components/services/ConsultationService';
+import { Badge } from '@/components/ui/badge';
 
 const Services = () => {
   return (
@@ -18,29 +20,67 @@ const Services = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="services" className="mb-12">
+        {/* Pay-Per-Minute Featured Banner */}
+        <div className="mb-16 bg-gradient-to-r from-soulseer-blue/20 to-soulseer-green/20 rounded-lg p-6 md:p-10">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="mb-6 md:mb-0 md:mr-10">
+              <Badge variant="secondary" className="mb-3">New Feature</Badge>
+              <h2 className="text-2xl md:text-3xl font-bold mb-3">Live Pay-Per-Minute Consultations</h2>
+              <p className="text-lg mb-4 max-w-xl">
+                Connect instantly with our spiritual advisors through video, audio, or chat. Pay only for the time you need.
+              </p>
+              <div className="flex flex-wrap gap-3 mb-6">
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-card text-foreground text-sm">
+                  <VideoIcon className="h-4 w-4 mr-1.5 text-soulseer-blue" />
+                  Video
+                </span>
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-card text-foreground text-sm">
+                  <MicIcon className="h-4 w-4 mr-1.5 text-soulseer-blue" />
+                  Audio
+                </span>
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-card text-foreground text-sm">
+                  <MessageSquare className="h-4 w-4 mr-1.5 text-soulseer-blue" />
+                  Chat
+                </span>
+              </div>
+              <Button asChild size="lg">
+                <a href="#consultations">View Available Experts</a>
+              </Button>
+            </div>
+            <div className="flex items-center justify-center bg-card rounded-lg p-6 shadow-lg w-full md:w-auto">
+              <div className="text-center">
+                <div className="flex justify-center mb-4">
+                  <Clock className="h-12 w-12 text-soulseer-gold" />
+                </div>
+                <p className="text-3xl font-bold mb-1">
+                  <span className="text-soulseer-gold">$2.99</span>
+                  <span className="text-sm font-normal">/minute</span>
+                </p>
+                <p className="text-muted-foreground text-sm">Starting rate</p>
+                <div className="border-t border-border mt-4 pt-4 text-sm text-muted-foreground">
+                  <p>No subscription required</p>
+                  <p>Pay only for what you use</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Tabs defaultValue="consultations" className="mb-12">
           <div className="flex justify-center mb-8">
             <TabsList>
-              <TabsTrigger value="services">Core Services</TabsTrigger>
               <TabsTrigger value="consultations">Live Consultations</TabsTrigger>
+              <TabsTrigger value="services">Core Services</TabsTrigger>
               <TabsTrigger value="packages">Packages</TabsTrigger>
               <TabsTrigger value="specialty">Specialty Services</TabsTrigger>
             </TabsList>
           </div>
-
-          <TabsContent value="services" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {coreServices.map((service) => (
-                <ServiceCard key={service.id} service={service} />
-              ))}
-            </div>
-          </TabsContent>
           
-          <TabsContent value="consultations" className="space-y-6">
+          <TabsContent value="consultations" className="space-y-6" id="consultations">
             <div className="mb-6">
               <h2 className="text-2xl font-semibold mb-2">Pay-Per-Minute Live Consultations</h2>
               <p className="text-muted-foreground mb-6">
-                Connect with our experts in real-time through video consultations. Pay only for the time you use.
+                Connect with our experts in real-time through video, audio, or chat consultations. Pay only for the time you use.
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -73,8 +113,8 @@ const Services = () => {
                   </div>
                   <div className="bg-card p-4 rounded-lg">
                     <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold mb-3">2</div>
-                    <h4 className="font-medium mb-2">Start Your Session</h4>
-                    <p className="text-sm text-muted-foreground">Enter your payment details and connect with your chosen expert via video.</p>
+                    <h4 className="font-medium mb-2">Select Communication Type</h4>
+                    <p className="text-sm text-muted-foreground">Choose between video, audio, or chat based on your comfort and needs.</p>
                   </div>
                   <div className="bg-card p-4 rounded-lg">
                     <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold mb-3">3</div>
@@ -91,6 +131,14 @@ const Services = () => {
                   </Button>
                 </div>
               </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="services" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {coreServices.map((service) => (
+                <ServiceCard key={service.id} service={service} />
+              ))}
             </div>
           </TabsContent>
 
@@ -371,7 +419,7 @@ const consultationServices = [
   {
     id: '1',
     title: 'Live Psychic Reading',
-    description: 'One-on-one live video consultation with our experienced psychic readers. Get immediate insights and guidance.',
+    description: 'One-on-one live video, audio, or chat consultation with our experienced psychic readers. Get immediate insights and guidance.',
     rate: 2.99,
     minDuration: 15,
     isAvailable: true,
@@ -381,7 +429,7 @@ const consultationServices = [
   {
     id: '2',
     title: 'Tarot Card Analysis',
-    description: 'Live tarot card reading sessions with real-time interpretation and guidance through video consultation.',
+    description: 'Live tarot card reading sessions with real-time interpretation and guidance through video, audio, or chat consultation.',
     rate: 3.49,
     minDuration: 10,
     isAvailable: false,
@@ -391,7 +439,7 @@ const consultationServices = [
   {
     id: '3',
     title: 'Astrology Consultation',
-    description: 'Get personalized astrological insights from our experts through a pay-per-minute video session.',
+    description: 'Get personalized astrological insights from our experts through a pay-per-minute video, audio, or chat session.',
     rate: 2.99,
     minDuration: 20,
     isAvailable: true,

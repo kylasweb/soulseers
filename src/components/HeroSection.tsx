@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, VideoIcon, Clock } from 'lucide-react';
 
 const HeroSection: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -46,7 +46,7 @@ const HeroSection: React.FC = () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            Connect with experienced guides who can help illuminate your journey, unlock your potential, and find clarity in life's important questions.
+            Connect with experienced guides who can help illuminate your journey through live video, audio, or chat consultations. Pay only for the time you use.
           </p>
           
           <div 
@@ -55,15 +55,24 @@ const HeroSection: React.FC = () => {
             }`}
           >
             <Button size="lg" asChild className="w-full sm:w-auto">
-              <Link to="/readings" className="flex items-center justify-center">
-                Book a Reading <ArrowRight className="ml-2 h-4 w-4" />
+              <Link to="/services" className="flex items-center justify-center">
+                Start Live Consultation <VideoIcon className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild className="w-full sm:w-auto">
-              <Link to="/explore">
-                Explore Services
+              <Link to="/services" className="flex items-center justify-center">
+                Explore Services <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
+          </div>
+          
+          <div 
+            className={`mt-6 flex items-center justify-center space-x-2 text-sm text-muted-foreground transition-all duration-700 delay-400 ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <Clock className="h-4 w-4" />
+            <span>Pay-per-minute: only pay for the time you use</span>
           </div>
         </div>
       </div>
