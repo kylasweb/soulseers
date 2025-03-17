@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MainLayout from '@/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -11,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { DollarSign, Clock, Calendar, CreditCard, ArrowLeft, ShieldCheck, PaypalIcon } from 'lucide-react';
+import { DollarSign, Clock, Calendar, CreditCard, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { PaymentProvider } from '@/utils/paymentUtils';
 import { useToast } from '@/components/ui/use-toast';
 
