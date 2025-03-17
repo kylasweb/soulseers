@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { UserPlus, DollarSign, VideoIcon, Clock, Calendar, Edit, Eye } from 'lucide-react';
+import { UserPlus, DollarSign, VideoIcon, Clock, Calendar, Edit, Eye, MicIcon, MessageSquare } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -24,7 +24,10 @@ interface Consultation {
   minDuration: number;
   expertName: string;
   isActive: boolean;
+  allowedCommunicationTypes: CommunicationType[];
 }
+
+type CommunicationType = 'audio' | 'video' | 'chat';
 
 // Define types for session data
 interface Session {
@@ -35,6 +38,7 @@ interface Session {
   duration: number;
   cost: number;
   status: 'completed' | 'scheduled' | 'in-progress';
+  communicationType: CommunicationType;
 }
 
 // Form schema for consultation service
@@ -45,6 +49,9 @@ const consultationSchema = z.object({
   minDuration: z.coerce.number().min(1, { message: 'Minimum duration must be at least 1 minute' }),
   expertName: z.string().min(2, { message: 'Expert name is required' }),
   isActive: z.boolean().default(true),
+  allowedCommunicationTypes: z.array(z.enum(['audio', 'video', 'chat'])).min(1, {
+    message: 'At least one communication type must be selected',
+  })
 });
 
 type ConsultationFormValues = z.infer<typeof consultationSchema>;
@@ -59,6 +66,7 @@ const mockSessions: Session[] = [
     duration: 24,
     cost: 71.76,
     status: 'completed',
+    communicationType: 'video'
   },
   {
     id: '2',
@@ -68,6 +76,7 @@ const mockSessions: Session[] = [
     duration: 15,
     cost: 44.85,
     status: 'completed',
+    communicationType: 'audio'
   },
   {
     id: '3',
@@ -77,6 +86,7 @@ const mockSessions: Session[] = [
     duration: 37,
     cost: 110.63,
     status: 'completed',
+    communicationType: 'chat'
   },
   {
     id: '4',
@@ -86,6 +96,7 @@ const mockSessions: Session[] = [
     duration: 0,
     cost: 0,
     status: 'scheduled',
+    communicationType: 'video'
   },
   {
     id: '5',
@@ -95,6 +106,7 @@ const mockSessions: Session[] = [
     duration: 0,
     cost: 0,
     status: 'in-progress',
+    communicationType: 'video'
   },
 ];
 
@@ -108,6 +120,7 @@ const mockConsultations: Consultation[] = [
     minDuration: 15,
     expertName: 'Alexandra Rivers',
     isActive: true,
+    allowedCommunicationTypes: ['audio', 'video', 'chat']
   },
   {
     id: '2',
@@ -117,6 +130,7 @@ const mockConsultations: Consultation[] = [
     minDuration: 10,
     expertName: 'David Thompson',
     isActive: true,
+    allowedCommunicationTypes: ['video', 'chat']
   },
   {
     id: '3',
@@ -126,6 +140,7 @@ const mockConsultations: Consultation[] = [
     minDuration: 20,
     expertName: 'Maria Garcia',
     isActive: false,
+    allowedCommunicationTypes: ['audio', 'chat']
   }
 ];
 
@@ -146,6 +161,7 @@ const AdminConsultations = () => {
       minDuration: 15,
       expertName: '',
       isActive: true,
+      allowedCommunicationTypes: ['video']
     },
   });
   
@@ -157,6 +173,7 @@ const AdminConsultations = () => {
       minDuration: 15,
       expertName: '',
       isActive: true,
+      allowedCommunicationTypes: ['video']
     });
     setEditingConsultation(null);
     setIsDialogOpen(true);
@@ -170,6 +187,7 @@ const AdminConsultations = () => {
       minDuration: consultation.minDuration,
       expertName: consultation.expertName,
       isActive: consultation.isActive,
+      allowedCommunicationTypes: consultation.allowedCommunicationTypes
     });
     setEditingConsultation(consultation);
     setIsDialogOpen(true);
@@ -195,7 +213,8 @@ const AdminConsultations = () => {
         rate: data.rate,
         minDuration: data.minDuration,
         expertName: data.expertName,
-        isActive: data.isActive
+        isActive: data.isActive,
+        allowedCommunicationTypes: data.allowedCommunicationTypes
       };
       
       setConsultations([...consultations, newConsultation]);
@@ -208,6 +227,17 @@ const AdminConsultations = () => {
     setConsultations(consultations.map(c => 
       c.id === id ? { ...c, isActive } : c
     ));
+  };
+
+  const getCommunicationTypeIcon = (type: CommunicationType) => {
+    switch (type) {
+      case 'audio':
+        return <MicIcon className="h-4 w-4 text-primary" />;
+      case 'video':
+        return <VideoIcon className="h-4 w-4 text-primary" />;
+      case 'chat':
+        return <MessageSquare className="h-4 w-4 text-primary" />;
+    }
   };
 
   return (
@@ -239,6 +269,7 @@ const AdminConsultations = () => {
                       <TableHead>Expert</TableHead>
                       <TableHead>Rate (per min)</TableHead>
                       <TableHead>Min Duration</TableHead>
+                      <TableHead>Communication</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
@@ -250,6 +281,16 @@ const AdminConsultations = () => {
                         <TableCell>{consultation.expertName}</TableCell>
                         <TableCell>${consultation.rate.toFixed(2)}</TableCell>
                         <TableCell>{consultation.minDuration} min</TableCell>
+                        <TableCell>
+                          <div className="flex space-x-1">
+                            {consultation.allowedCommunicationTypes.map(type => (
+                              <div key={type} className="flex items-center bg-muted rounded-full px-2 py-1 text-xs">
+                                {getCommunicationTypeIcon(type)}
+                                <span className="ml-1 hidden md:inline">{type}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">
                             <Switch 
@@ -292,6 +333,7 @@ const AdminConsultations = () => {
                       <TableHead>User</TableHead>
                       <TableHead>Expert</TableHead>
                       <TableHead>Date</TableHead>
+                      <TableHead>Type</TableHead>
                       <TableHead>Duration</TableHead>
                       <TableHead>Cost</TableHead>
                       <TableHead>Status</TableHead>
@@ -304,6 +346,12 @@ const AdminConsultations = () => {
                         <TableCell className="font-medium">{session.user}</TableCell>
                         <TableCell>{session.expert}</TableCell>
                         <TableCell>{format(new Date(session.date), 'PP')}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center">
+                            {getCommunicationTypeIcon(session.communicationType)}
+                            <span className="ml-1 text-xs capitalize">{session.communicationType}</span>
+                          </div>
+                        </TableCell>
                         <TableCell>
                           {session.status === 'scheduled' 
                             ? 'Not started' 
@@ -439,6 +487,108 @@ const AdminConsultations = () => {
               
               <FormField
                 control={form.control}
+                name="allowedCommunicationTypes"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Communication Types</FormLabel>
+                    <div className="space-y-2">
+                      <FormField
+                        control={form.control}
+                        name="allowedCommunicationTypes"
+                        render={({ field }) => {
+                          return (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                              <FormControl>
+                                <div className="grid grid-cols-3 gap-2">
+                                  <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-muted/50 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={field.value?.includes('audio')}
+                                      onChange={(e) => {
+                                        const values = [...field.value];
+                                        if (e.target.checked) {
+                                          values.push('audio');
+                                        } else {
+                                          const index = values.indexOf('audio');
+                                          if (index !== -1) {
+                                            values.splice(index, 1);
+                                          }
+                                        }
+                                        field.onChange(values);
+                                      }}
+                                      className="h-4 w-4"
+                                    />
+                                    <label className="text-sm flex items-center cursor-pointer">
+                                      <MicIcon className="h-4 w-4 mr-1" />
+                                      Audio
+                                    </label>
+                                  </div>
+                                  
+                                  <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-muted/50 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={field.value?.includes('video')}
+                                      onChange={(e) => {
+                                        const values = [...field.value];
+                                        if (e.target.checked) {
+                                          values.push('video');
+                                        } else {
+                                          const index = values.indexOf('video');
+                                          if (index !== -1) {
+                                            values.splice(index, 1);
+                                          }
+                                        }
+                                        field.onChange(values);
+                                      }}
+                                      className="h-4 w-4"
+                                    />
+                                    <label className="text-sm flex items-center cursor-pointer">
+                                      <VideoIcon className="h-4 w-4 mr-1" />
+                                      Video
+                                    </label>
+                                  </div>
+                                  
+                                  <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-muted/50 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={field.value?.includes('chat')}
+                                      onChange={(e) => {
+                                        const values = [...field.value];
+                                        if (e.target.checked) {
+                                          values.push('chat');
+                                        } else {
+                                          const index = values.indexOf('chat');
+                                          if (index !== -1) {
+                                            values.splice(index, 1);
+                                          }
+                                        }
+                                        field.onChange(values);
+                                      }}
+                                      className="h-4 w-4"
+                                    />
+                                    <label className="text-sm flex items-center cursor-pointer">
+                                      <MessageSquare className="h-4 w-4 mr-1" />
+                                      Chat
+                                    </label>
+                                  </div>
+                                </div>
+                              </FormControl>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      
+                      <FormMessage />
+                    </div>
+                    <FormDescription>
+                      Select which communication methods are available for this service
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
                 name="isActive"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
@@ -498,6 +648,14 @@ const AdminConsultations = () => {
                     <span>Time</span>
                   </div>
                   <div className="font-medium">{format(new Date(viewingSession.date), 'p')}</div>
+                </div>
+                
+                <div className="flex justify-between items-center p-3 rounded-lg bg-muted">
+                  <div className="flex items-center">
+                    {getCommunicationTypeIcon(viewingSession.communicationType)}
+                    <span className="ml-1">Type</span>
+                  </div>
+                  <div className="font-medium capitalize">{viewingSession.communicationType}</div>
                 </div>
                 
                 <div className="flex justify-between items-center p-3 rounded-lg bg-muted">

@@ -3,10 +3,13 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, VideoIcon, DollarSign } from 'lucide-react';
+import { Calendar, Clock, VideoIcon, DollarSign, MicIcon, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useNavigate } from 'react-router-dom';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 interface ConsultationServiceProps {
   title: string;
@@ -28,11 +31,31 @@ const ConsultationService: React.FC<ConsultationServiceProps> = ({
   expertImage
 }) => {
   const [showDetails, setShowDetails] = React.useState(false);
+  const [communicationType, setCommunicationType] = React.useState<"audio" | "video" | "chat">("video");
   const navigate = useNavigate();
 
   const handleBooking = () => {
     setShowDetails(false);
-    navigate('/consultations/booking');
+    navigate('/consultations/booking', { 
+      state: { 
+        communicationType,
+        rate,
+        minDuration,
+        expertName,
+        title
+      } 
+    });
+  };
+
+  const getCommunicationIcon = () => {
+    switch (communicationType) {
+      case "audio":
+        return <MicIcon className="h-5 w-5 text-primary" />;
+      case "video":
+        return <VideoIcon className="h-5 w-5 text-primary" />;
+      case "chat":
+        return <MessageSquare className="h-5 w-5 text-primary" />;
+    }
   };
 
   return (
@@ -113,6 +136,38 @@ const ConsultationService: React.FC<ConsultationServiceProps> = ({
                 <div className="font-medium">Pay-as-you-go</div>
               </div>
             </div>
+            
+            <div className="mt-6">
+              <label className="text-sm font-medium mb-2 block">Select communication type:</label>
+              <RadioGroup 
+                value={communicationType} 
+                onValueChange={(value) => setCommunicationType(value as "audio" | "video" | "chat")} 
+                className="grid grid-cols-3 gap-3 mt-2"
+              >
+                <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-muted/50 cursor-pointer">
+                  <RadioGroupItem value="audio" id="audio" />
+                  <Label htmlFor="audio" className="flex items-center cursor-pointer">
+                    <MicIcon className="h-4 w-4 mr-2" />
+                    Audio
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-muted/50 cursor-pointer">
+                  <RadioGroupItem value="video" id="video" />
+                  <Label htmlFor="video" className="flex items-center cursor-pointer">
+                    <VideoIcon className="h-4 w-4 mr-2" />
+                    Video
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-muted/50 cursor-pointer">
+                  <RadioGroupItem value="chat" id="chat" />
+                  <Label htmlFor="chat" className="flex items-center cursor-pointer">
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Chat
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+            
             <div className="mt-6 p-4 border rounded-lg bg-yellow-50 border-yellow-200">
               <p className="text-sm text-yellow-800">
                 You will be charged <span className="font-bold">${rate}</span> per minute once the consultation starts. 
