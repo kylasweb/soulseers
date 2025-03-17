@@ -7,6 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
+import PaymentTracker from '@/components/payments/PaymentTracker';
+import { 
+  authorizePayment, 
+  completePayment, 
+  PaymentStatus, 
+  PaymentProvider 
+} from '@/utils/paymentUtils';
 
 // Define a more specific type for message senders
 type MessageSender = 'user' | 'expert';
@@ -19,7 +26,8 @@ interface ChatMessage {
 
 const ConsultationSession = () => {
   const [sessionTime, setSessionTime] = useState(0);
-  const [isRunning, setIsRunning] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isPreparing, setIsPreparing] = useState(true);
   const [cost, setCost] = useState(0);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [videoEnabled, setVideoEnabled] = useState(true);
@@ -28,6 +36,8 @@ const ConsultationSession = () => {
     { sender: 'expert', text: 'Hello, how can I help you today?' }
   ]);
   const [communicationType, setCommunicationType] = useState<"audio" | "video" | "chat">("video");
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('authorized');
+  const [paymentAuthId, setPaymentAuthId] = useState<string | undefined>(undefined);
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,16 +53,70 @@ const ConsultationSession = () => {
   // Rate per minute (in dollars)
   const rate = location.state?.rate || 2.99;
   
+  // Initialize payment and setup
   useEffect(() => {
     // Get communication type from location state if available
     if (location.state?.communicationType) {
       setCommunicationType(location.state.communicationType);
     }
     
-    // Set up WebRTC connection
-    setupWebRTC();
+    const initializeSession = async () => {
+      setIsPreparing(true);
+      
+      try {
+        // First authorize the initial payment
+        const initialAuth = await authorizePayment('stripe', 5.00, 'user123');
+        
+        if (initialAuth.success && initialAuth.authorizationId) {
+          setPaymentAuthId(initialAuth.authorizationId);
+          setPaymentStatus('authorized');
+          
+          // Then set up WebRTC
+          await setupWebRTC();
+          
+          // Start the session
+          setIsRunning(true);
+          setIsPreparing(false);
+          
+          toast({
+            title: "Session Started",
+            description: "Your consultation has begun. You'll only be charged for the time you use.",
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Payment Authorization Failed",
+            description: initialAuth.error || "Unable to authorize payment. Please try again.",
+          });
+          
+          setTimeout(() => {
+            navigate('/services');
+          }, 3000);
+        }
+      } catch (error) {
+        console.error('Error starting session:', error);
+        
+        toast({
+          variant: "destructive",
+          title: "Session Error",
+          description: "Unable to start the consultation session. Please try again.",
+        });
+        
+        setTimeout(() => {
+          navigate('/services');
+        }, 3000);
+      }
+    };
     
-    // Timer for session duration and cost calculation
+    initializeSession();
+    
+    return () => {
+      endSession(true);
+    };
+  }, [location.state]);
+  
+  // Timer for session duration and cost calculation
+  useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     
     if (isRunning) {
@@ -67,9 +131,8 @@ const ConsultationSession = () => {
     
     return () => {
       clearInterval(interval);
-      cleanupWebRTC();
     };
-  }, [isRunning, rate, location.state]);
+  }, [isRunning, rate]);
 
   // Set up WebRTC
   const setupWebRTC = async () => {
@@ -117,7 +180,7 @@ const ConsultationSession = () => {
       // Set up data channel for chat
       const dataChannel = pc.createDataChannel('chat');
       dataChannel.onmessage = (event) => {
-        const newMessage = { sender: 'expert', text: event.data } as const;
+        const newMessage: ChatMessage = { sender: 'expert', text: event.data };
         setMessages(prev => [...prev, newMessage]);
       };
       
@@ -183,6 +246,23 @@ const ConsultationSession = () => {
     }, 1000);
   };
   
+  // Handle payment errors
+  const handlePaymentError = () => {
+    toast({
+      variant: "destructive",
+      title: "Payment Failed",
+      description: "There was an issue processing your payment. The session will end in 1 minute if not resolved.",
+    });
+    
+    // In a real app, you would attempt to reauthorize payment here
+    // For now, we'll just end the session after a delay
+    setTimeout(() => {
+      if (paymentStatus === 'failed') {
+        endSession();
+      }
+    }, 60000);
+  };
+  
   // Cleanup WebRTC resources
   const cleanupWebRTC = () => {
     if (localStreamRef.current) {
@@ -202,19 +282,56 @@ const ConsultationSession = () => {
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
   
-  const endSession = () => {
+  const endSession = async (skipNavigation = false) => {
     setIsRunning(false);
     cleanupWebRTC();
     
-    // In a real app, this would send the final billing information to a server
-    setTimeout(() => {
-      navigate('/consultations/completed', { 
-        state: { 
-          duration: sessionTime,
-          cost: cost 
-        } 
-      });
-    }, 1000);
+    // Process final payment
+    if (paymentAuthId && sessionTime > 0) {
+      setPaymentStatus('charging');
+      
+      try {
+        const finalPayment = await completePayment(paymentAuthId, cost);
+        
+        if (finalPayment.success) {
+          setPaymentStatus('completed');
+          
+          toast({
+            title: "Payment Completed",
+            description: `Your payment of $${cost.toFixed(2)} has been processed successfully.`,
+          });
+        } else {
+          setPaymentStatus('failed');
+          
+          toast({
+            variant: "destructive",
+            title: "Payment Failed",
+            description: finalPayment.error || "There was an error processing your final payment.",
+          });
+        }
+      } catch (error) {
+        setPaymentStatus('failed');
+        
+        toast({
+          variant: "destructive",
+          title: "Payment Error",
+          description: "Failed to process your final payment.",
+        });
+      }
+    }
+    
+    // Navigate to completion page
+    if (!skipNavigation) {
+      setTimeout(() => {
+        navigate('/consultations/completed', { 
+          state: { 
+            duration: sessionTime,
+            cost: cost,
+            paymentStatus: paymentStatus
+          } 
+        });
+      }, 1000);
+    }
   };
   
   const toggleAudio = () => {
@@ -288,6 +405,19 @@ const ConsultationSession = () => {
     }
   }, [messages]);
   
+  // Show loading state while preparing
+  if (isPreparing) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center p-8 max-w-md">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div>
+          <h3 className="text-white text-xl font-semibold mb-2">Preparing Your Session</h3>
+          <p className="text-gray-400">Setting up your consultation and processing initial payment...</p>
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <div className="min-h-screen bg-black p-4">
       <div className="mx-auto max-w-7xl h-full flex flex-col">
@@ -310,7 +440,7 @@ const ConsultationSession = () => {
             <Button 
               variant="destructive" 
               size="sm" 
-              onClick={endSession}
+              onClick={() => endSession()}
             >
               End Session
             </Button>
@@ -389,14 +519,24 @@ const ConsultationSession = () => {
               <Button 
                 variant="destructive" 
                 size="icon" 
-                onClick={endSession}
+                onClick={() => endSession()}
               >
                 <PhoneOffIcon />
               </Button>
             </div>
           </div>
           
-          <div className={`col-span-1 ${communicationType === 'chat' ? 'md:col-span-4' : 'md:col-span-1'} flex flex-col`}>
+          <div className={`col-span-1 ${communicationType === 'chat' ? 'md:col-span-4' : 'md:col-span-1'} flex flex-col space-y-4`}>
+            {/* Payment Tracker */}
+            <PaymentTracker
+              isRunning={isRunning}
+              elapsedTime={sessionTime}
+              rate={rate}
+              authorizationId={paymentAuthId}
+              onPaymentError={handlePaymentError}
+            />
+            
+            {/* Chat */}
             <Card className="flex-grow flex flex-col">
               <CardContent className="p-4 flex-grow flex flex-col">
                 <div className="mb-4">
