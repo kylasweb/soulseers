@@ -15,6 +15,28 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from 'date-fns';
 
+// Define types for consultation data
+interface Consultation {
+  id: string;
+  title: string;
+  description: string;
+  rate: number;
+  minDuration: number;
+  expertName: string;
+  isActive: boolean;
+}
+
+// Define types for session data
+interface Session {
+  id: string;
+  user: string;
+  expert: string;
+  date: string;
+  duration: number;
+  cost: number;
+  status: 'completed' | 'scheduled' | 'in-progress';
+}
+
 // Form schema for consultation service
 const consultationSchema = z.object({
   title: z.string().min(3, { message: 'Title is required' }),
@@ -28,7 +50,7 @@ const consultationSchema = z.object({
 type ConsultationFormValues = z.infer<typeof consultationSchema>;
 
 // Mock data for sessions
-const mockSessions = [
+const mockSessions: Session[] = [
   {
     id: '1',
     user: 'Emily Johnson',
@@ -77,7 +99,7 @@ const mockSessions = [
 ];
 
 // Mock data for consultations
-const mockConsultations = [
+const mockConsultations: Consultation[] = [
   {
     id: '1',
     title: 'Live Psychic Reading',
@@ -108,11 +130,11 @@ const mockConsultations = [
 ];
 
 const AdminConsultations = () => {
-  const [consultations, setConsultations] = useState(mockConsultations);
-  const [sessions, setSessions] = useState(mockSessions);
-  const [editingConsultation, setEditingConsultation] = useState<ConsultationFormValues | null>(null);
+  const [consultations, setConsultations] = useState<Consultation[]>(mockConsultations);
+  const [sessions, setSessions] = useState<Session[]>(mockSessions);
+  const [editingConsultation, setEditingConsultation] = useState<Consultation | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [viewingSession, setViewingSession] = useState<any>(null);
+  const [viewingSession, setViewingSession] = useState<Session | null>(null);
   const [isSessionDialogOpen, setIsSessionDialogOpen] = useState(false);
   
   const form = useForm<ConsultationFormValues>({
@@ -140,7 +162,7 @@ const AdminConsultations = () => {
     setIsDialogOpen(true);
   };
   
-  const openEditConsultationDialog = (consultation: any) => {
+  const openEditConsultationDialog = (consultation: Consultation) => {
     form.reset({
       title: consultation.title,
       description: consultation.description,
@@ -153,7 +175,7 @@ const AdminConsultations = () => {
     setIsDialogOpen(true);
   };
   
-  const viewSessionDetails = (session: any) => {
+  const viewSessionDetails = (session: Session) => {
     setViewingSession(session);
     setIsSessionDialogOpen(true);
   };
@@ -166,13 +188,17 @@ const AdminConsultations = () => {
       ));
     } else {
       // Add new consultation
-      setConsultations([
-        ...consultations,
-        {
-          id: `${consultations.length + 1}`,
-          ...data
-        }
-      ]);
+      const newConsultation: Consultation = {
+        id: `${consultations.length + 1}`,
+        title: data.title,
+        description: data.description,
+        rate: data.rate,
+        minDuration: data.minDuration,
+        expertName: data.expertName,
+        isActive: data.isActive
+      };
+      
+      setConsultations([...consultations, newConsultation]);
     }
     
     setIsDialogOpen(false);
