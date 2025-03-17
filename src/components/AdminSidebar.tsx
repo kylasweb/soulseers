@@ -14,7 +14,8 @@ import {
   VideoIcon,
   ChevronRight, 
   Menu, 
-  X 
+  X,
+  BookOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
@@ -68,6 +69,7 @@ const SidebarContent: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
   const menuItems = [
     { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/admin' },
     { icon: <Users size={18} />, label: 'User Management', path: '/admin/users' },
+    { icon: <BookOpen size={18} />, label: 'Reader Management', path: '/admin/readers' },
     { icon: <Pencil size={18} />, label: 'Frontend Manager', path: '/admin/frontend' },
     { icon: <CreditCard size={18} />, label: 'Payment Management', path: '/admin/payments' },
     { icon: <VideoIcon size={18} />, label: 'Consultations', path: '/admin/consultations' },
