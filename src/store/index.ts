@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { User, Reader, Transaction, Post, Notification, Analytics } from '@/types';
+import { User, Reader, Transaction, Post, Notification, Analytics, FeatureModule } from '@/types';
 
 interface AuthStore {
   user: User | null;
@@ -44,6 +44,14 @@ interface UserPreferencesStore {
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
   toggleFavoriteReader: (readerId: string) => void;
   updateNotificationPreferences: (preferences: { email?: boolean; push?: boolean; sms?: boolean }) => void;
+}
+
+interface FeatureManagementStore {
+  modules: FeatureModule[];
+  updateFeature: (moduleId: string, featureId: string, enabled: boolean) => void;
+  updateModule: (moduleId: string, enabled: boolean) => void;
+  getFeatureState: (moduleId: string, featureId: string) => boolean;
+  getModuleState: (moduleId: string) => boolean;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -143,5 +151,145 @@ export const useUserPreferencesStore = create<UserPreferencesStore>()(
         })),
     }),
     { name: 'user-preferences-store' }
+  )
+);
+
+export const useFeatureManagementStore = create<FeatureManagementStore>()(
+  persist(
+    (set, get) => ({
+      modules: [
+        {
+          id: 'user-management',
+          name: 'User Management',
+          description: 'Control user-related features and capabilities',
+          enabled: true,
+          features: [
+            {
+              id: 'user-registration',
+              name: 'User Registration',
+              description: 'Allow new users to register',
+              enabled: true,
+              module: 'user-management'
+            },
+            {
+              id: 'two-factor-auth',
+              name: 'Two-Factor Authentication',
+              description: 'Enable 2FA for users',
+              enabled: true,
+              module: 'user-management'
+            }
+          ]
+        },
+        {
+          id: 'payment-system',
+          name: 'Payment System',
+          description: 'Control payment and transaction features',
+          enabled: true,
+          features: [
+            {
+              id: 'credit-payments',
+              name: 'Credit Payments',
+              description: 'Allow credit card payments',
+              enabled: true,
+              module: 'payment-system'
+            },
+            {
+              id: 'refund-system',
+              name: 'Refund System',
+              description: 'Enable refund processing',
+              enabled: true,
+              module: 'payment-system'
+            }
+          ]
+        },
+        {
+          id: 'reader-features',
+          name: 'Reader Features',
+          description: 'Control reader-specific features',
+          enabled: true,
+          features: [
+            {
+              id: 'reader-scheduling',
+              name: 'Reader Scheduling',
+              description: 'Enable scheduling system for readers',
+              enabled: true,
+              module: 'reader-features'
+            },
+            {
+              id: 'reader-analytics',
+              name: 'Reader Analytics',
+              description: 'Enable analytics for readers',
+              enabled: true,
+              module: 'reader-features'
+            }
+          ]
+        },
+        {
+          id: 'social-features',
+          name: 'Social Features',
+          description: 'Control social interaction features',
+          enabled: true,
+          features: [
+            {
+              id: 'posts',
+              name: 'Posts',
+              description: 'Enable post creation and interaction',
+              enabled: true,
+              module: 'social-features'
+            },
+            {
+              id: 'comments',
+              name: 'Comments',
+              description: 'Enable commenting on posts',
+              enabled: true,
+              module: 'social-features'
+            }
+          ]
+        }
+      ],
+      updateFeature: (moduleId, featureId, enabled) =>
+        set((state) => ({
+          modules: state.modules.map((module) =>
+            module.id === moduleId
+              ? {
+                  ...module,
+                  features: module.features.map((feature) =>
+                    feature.id === featureId
+                      ? { ...feature, enabled, lastUpdated: new Date() }
+                      : feature
+                  ),
+                }
+              : module
+          ),
+        })),
+      updateModule: (moduleId, enabled) =>
+        set((state) => ({
+          modules: state.modules.map((module) =>
+            module.id === moduleId
+              ? {
+                  ...module,
+                  enabled,
+                  features: module.features.map((feature) => ({
+                    ...feature,
+                    enabled: enabled ? feature.enabled : false,
+                  })),
+                }
+              : module
+          ),
+        })),
+      getFeatureState: (moduleId, featureId) => {
+        const state = get();
+        const module = state.modules.find((m) => m.id === moduleId);
+        if (!module || !module.enabled) return false;
+        const feature = module.features.find((f) => f.id === featureId);
+        return feature ? feature.enabled : false;
+      },
+      getModuleState: (moduleId) => {
+        const state = get();
+        const module = state.modules.find((m) => m.id === moduleId);
+        return module ? module.enabled : false;
+      },
+    }),
+    { name: 'feature-management-store' }
   )
 ); 
