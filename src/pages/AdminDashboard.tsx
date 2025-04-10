@@ -1,3 +1,4 @@
+
 import React from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -13,7 +14,6 @@ import AdminPayments from '@/components/admin/AdminPayments';
 import AdminSocial from '@/components/admin/AdminSocial';
 import AdminConsultations from '@/components/admin/AdminConsultations';
 import AdminReaders from '@/components/admin/AdminReaders';
-import FeatureManager from '@/components/admin/FeatureManager';
 
 const AdminDashboard = () => {
   const location = useLocation();
@@ -31,7 +31,6 @@ const AdminDashboard = () => {
     if (currentPath.includes('/admin/security')) return 'security';
     if (currentPath.includes('/admin/consultations')) return 'consultations';
     if (currentPath.includes('/admin/readers')) return 'readers';
-    if (currentPath.includes('/admin/features')) return 'features';
     return 'overview';
   };
 
@@ -50,7 +49,6 @@ const AdminDashboard = () => {
           <Route path="/security" element={<AdminSecurity />} />
           <Route path="/consultations" element={<AdminConsultations />} />
           <Route path="/readers" element={<AdminReaders />} />
-          <Route path="/features" element={<FeatureManager />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>
       </AdminLayout>

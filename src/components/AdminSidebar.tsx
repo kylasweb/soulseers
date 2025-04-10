@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from "@/lib/utils";
 import { 
@@ -14,8 +15,7 @@ import {
   ChevronRight, 
   Menu, 
   X,
-  BookOpen,
-  ToggleLeft
+  BookOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
@@ -76,7 +76,6 @@ const SidebarContent: React.FC<{ collapsed: boolean }> = ({ collapsed }) => {
     { icon: <Share size={18} />, label: 'Social Media Manager', path: '/admin/social' },
     { icon: <FileText size={18} />, label: 'Content Management', path: '/admin/content' },
     { icon: <BarChart size={18} />, label: 'Analytics', path: '/admin/analytics' },
-    { icon: <ToggleLeft size={18} />, label: 'Feature Management', path: '/admin/features' },
     { icon: <Settings size={18} />, label: 'System Settings', path: '/admin/settings' },
     { icon: <Shield size={18} />, label: 'Security', path: '/admin/security' },
   ];
