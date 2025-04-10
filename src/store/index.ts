@@ -292,4 +292,4 @@ export const useFeatureManagementStore = create<FeatureManagementStore>()(
     }),
     { name: 'feature-management-store' }
   )
-); 
+);
