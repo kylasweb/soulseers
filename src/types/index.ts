@@ -168,4 +168,23 @@ export interface Session {
   rating?: number;
   review?: Review;
   notes?: string;
+}
+
+export interface FeatureFlag {
+  id: string;
+  name: string;
+  description: string;
+  enabled: boolean;
+  module: string;
+  dependencies?: string[];
+  lastUpdated?: Date;
+  updatedBy?: string;
+}
+
+export interface FeatureModule {
+  id: string;
+  name: string;
+  description: string;
+  enabled: boolean;
+  features: FeatureFlag[];
 } 
